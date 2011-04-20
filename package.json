@@ -3,7 +3,8 @@
   "description": "A enhancement/wrapper around the wonderful Winston logger.",
   "version": "0.0.0",
   "repository": {
-    "url": ""
+    "type": "git",
+    "url": "git://github.com/AntPortal/nebulog.git"
   },
   "author": "Nebu Pookins <nebupookins@gmail.com>",
   "directories": {
@@ -13,7 +14,8 @@
     "node": "*"
   },
   "main": "nebulog.js",
-  "dependencies" : { 
+  "dependencies": {
     "winston": "0.2.7"
-  }
+  },
+  "homepage": "https://github.com/AntPortal/nebulog"
 }
