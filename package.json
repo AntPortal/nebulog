@@ -1,0 +1,19 @@
+{
+  "name": "nebulog",
+  "description": "A enhancement/wrapper around the wonderful Winston logger.",
+  "version": "0.0.0",
+  "repository": {
+    "url": ""
+  },
+  "author": "Nebu Pookins <nebupookins@gmail.com>",
+  "directories": {
+    "lib": "."
+  },
+  "engines": {
+    "node": "*"
+  },
+  "main": "nebulog.js",
+  "dependencies" : { 
+    "winston": "0.2.7"
+  }
+}
