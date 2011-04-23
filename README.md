@@ -29,7 +29,7 @@ The enhancements over a vanilla implementation of Winston are:
 
 ### Basic Usage
 <pre>
-  var logger = require('nebulog').make(__filename);
+  var logger = require('nebulog').make({filename: __filename});
 
   logger.log('info', 'Logger is working');
   logger.info('This also works');
@@ -38,7 +38,7 @@ The enhancements over a vanilla implementation of Winston are:
 ### Setting minimum log level
 
 <pre>
-  var logger = require('nebulog').make(__filename, 'warn');
+  var logger = require('nebulog').make({filename: __filename, level: 'warn'});
 
   logger.warn('This will be visible.');
   logger.info("But this won't");
@@ -51,8 +51,8 @@ The log available log levels, from least serious to most serious, are:
 ### Logger per function
 
 <pre>
-  var loggerA = require('nebulog').make(__filename + ':A');
-  var loggerB = require('nebulog').make(__filename + ':B');
+  var loggerA = require('nebulog').make({filename: __filename + ':A'});
+  var loggerB = require('nebulog').make({filename: __filename + ':B'});
 
   function A() {
     loggerA.info('This log message will be marked as coming from A');
@@ -63,6 +63,3 @@ The log available log levels, from least serious to most serious, are:
   }
 </pre>
 
-## TODO:
-* Expose more of Winston's underlying functionality, such as configuring the
-  transport.

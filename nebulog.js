@@ -32,17 +32,24 @@ function getPadding(len) {
 	return ' ' + getPadding(len - 1);
 }
 
-exports.make = function(filename, minLogLevel) {
-	var lastSlash = filename.lastIndexOf('/');
-	var shortFileName = filename.substring();
-	if (lastSlash >= 0) {
-		shortFileName = filename.substring(lastSlash + 1);
+exports.make = function(config) {
+	var formattedShortFilename = shortFileName ? '[' + shortFileName + '] ' : '';
+	if (config.filename) {
+		var lastSlash = config.filename.lastIndexOf('/');
+		var shortFileName = config.filename.substring();
+		if (lastSlash >= 0) {
+			shortFileName = config.filename.substring(lastSlash + 1);
+		} else {
+			shortFileName = config.filename;
+		}
+		formattedShortFilename = '[' + shortFileName + ']';
 	} else {
-		shortFileName = filename;
+		formattedShortFilename = '';
 	}
-	var formattedShortFilename = '[' + shortFileName + '] ';
-	minLogLevel = minLogLevel || 'verbose';
-	var winstonLogger = new (winston.Logger)({transports: [new (winston.transports.Console)({level: minLogLevel, colorize: true})]});
+	config.colorize = (typeof config.colorize === 'undefined') ? true : config.colorize;
+	config.transport = config.transport || winston.transports.Console;
+	var minLogLevel = config.level || 'verbose';
+	var winstonLogger = new (winston.Logger)({transports: [new (config.transport)(config)]});
 	var retVal = {
 		log: function(level, msg, optionalArgs) {
 			var finalMessage = [getPadding(maxLogLevelLength - level.length), formattedShortFilename, msg];
