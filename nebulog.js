@@ -32,24 +32,71 @@ function getPadding(len) {
 	return ' ' + getPadding(len - 1);
 }
 
-exports.make = function(config) {
-	var formattedShortFilename = shortFileName ? '[' + shortFileName + '] ' : '';
-	if (config.filename) {
-		var lastSlash = config.filename.lastIndexOf('/');
-		var shortFileName = config.filename.substring();
-		if (lastSlash >= 0) {
-			shortFileName = config.filename.substring(lastSlash + 1);
-		} else {
-			shortFileName = config.filename;
+
+const config_JSON_Schema = {
+	'description': 'Configuration settings for nebulog',
+	'type': 'object',
+	'properties': {
+		'filename': {
+			'description': 'set to __filename to allow nebulog to insert the source filename each message comes from.',
+			'type': 'string',
+			'required': false
+		},
+		'transports': {
+			'description': 'The different Winston transports to log to',
+			'type': 'array',
+			'required': false,
+			'items': {
+				'description': 'A description of one particular transport',
+				'type': 'object',
+				'properties': {
+					'name': {
+						'description': 'the name of the Winston transport to use.',
+						'type': 'string',
+						'required': true,
+						'enum': ['Console', 'File', 'Loggly']
+					},
+					'config': {
+						'description': 'The configuration settings to pass onto the Winston transport.',
+						'type': 'object',
+					}
+				}
+			}
+		},
+		'level': {
+			'description': 'If no transport is provided, then a default Console transport will be provided, with this level.',
+			'type': 'string',
+			'required': 'false'
 		}
-		formattedShortFilename = '[' + shortFileName + ']';
-	} else {
-		formattedShortFilename = '';
 	}
-	config.colorize = (typeof config.colorize === 'undefined') ? true : config.colorize;
-	config.transport = config.transport || winston.transports.Console;
-	var minLogLevel = config.level || 'verbose';
-	var winstonLogger = new (winston.Logger)({transports: [new (config.transport)(config)]});
+}
+
+function computeFormattedShortFilename(filename) {
+	if (filename) {
+		var shortFileName;
+		var lastSlash = filename.lastIndexOf('/');
+		if (lastSlash >= 0) {
+			shortFileName = filename.substring(lastSlash + 1);
+		} else {
+			shortFileName = filename;
+		}
+		return '[' + shortFileName + ']';
+	} else {
+		return '';
+	}
+}
+
+
+exports.make = function(config) {
+	var formattedShortFilename = computeFormattedShortFilename(config.filename);
+	if (!config.transports) {
+		config.transports = [{name:'Console', config: {colorize: true, level: config.level || 'verbose'}}];
+	}
+	var transports = [];
+	config.transports.forEach(function(transport) {
+		transports.push(new winston.transports[transport.name](transport.config));
+	});
+	var winstonLogger = new (winston.Logger)({transports: transports});
 	var retVal = {
 		log: function(level, msg, optionalArgs) {
 			var finalMessage = [getPadding(maxLogLevelLength - level.length), formattedShortFilename, msg];
