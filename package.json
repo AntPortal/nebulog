@@ -1,7 +1,7 @@
 {
   "name": "nebulog",
   "description": "A enhancement/wrapper around the wonderful Winston logger.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/AntPortal/nebulog.git"
@@ -15,7 +15,7 @@
   },
   "main": "nebulog.js",
   "dependencies": {
-    "winston": "0.2.7"
+    "winston": "2.1.1"
   },
   "homepage": "https://github.com/AntPortal/nebulog"
 }

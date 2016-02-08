@@ -21,7 +21,7 @@ function logPerFunctionDemo() {
 	var loggerB = require('./nebulog.js').make({filename: __filename + 'B'});
 
 	function A() {
-		loggerA.debug('This log message will be marked as coming from A');
+		loggerA.error('This log message will be marked as coming from A');
 	}
 
 	function B() {
